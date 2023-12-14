@@ -302,3 +302,28 @@ async def eliminar_contacto(email: str, credentialsv: HTTPAuthorizationCredentia
         return {"mensaje": "Contacto eliminado"}
     except sqlite3.Error:
         return error_response("Error al consultar los datos", 500)
+from fastapi import HTTPException
+
+@app.get("/usuarios", response_model=list)
+async def obtener_usuarios(token: str = Depends(securirtyBearer)):
+    # Verifica si el token es válido para el usuario actual
+    if not validar_token(token):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token no válido",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        c = conn.cursor()
+        c.execute('SELECT username, password, token FROM usuarios;')
+        response = []
+        for row in c:
+            usuario = {"username": row[0], "password": row[1], "token": row[2]}
+            response.append(usuario)
+        if not response:
+            return []
+        return response
+    except sqlite3.Error:
+        return error_response("Error al consultar los datos", 500)
+
