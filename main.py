@@ -19,7 +19,7 @@ app = FastAPI()
 
 # Permitimos los origenes para conectarse
 origins = [
-    "https://frontend-partii-e54c25465181.herokuapp.com/
+    "https://frontend-partii-e54c25465181.herokuapp.com"
 ]
 
 # Agregamos las opciones de origenes, credenciales, métodos y headers
